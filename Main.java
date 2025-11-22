@@ -1,40 +1,53 @@
-package demo;
+import java.util.Calendar;
 
-import library.Book;
-import library.Library;
-
-/**
- * Демонстрационное приложение для работы с библиотеками и книгами.
- */
 public class Main {
     public static void main(String[] args) {
-        Library centralLibrary = new Library("Центральная библиотека");
-        Library universityLibrary = new Library("Университетская библиотека");
 
-        centralLibrary.addBook(new Book("Мастер и Маргарита", "Михаил Булгаков", 1940));
-        centralLibrary.addBook(new Book("Белая гвардия", "Михаил Булгаков", 1925));
-        centralLibrary.addBook(new Book("Преступление и наказание", "Фёдор Достоевский", 1866));
+        // Создаём репозиторий
+        CarRepository repo = new CarRepository();
 
-        universityLibrary.addBook(new Book("Идиот", "Фёдор Достоевский", 1869));
-        universityLibrary.addBook(new Book("Собачье сердце", "Михаил Булгаков", 1925));
-        universityLibrary.addBook(new Book("Братья Карамазовы", "Фёдор Достоевский", 1880));
+        // ---------- Добавляем автомобили ----------
+        repo.add(new Car(1, "Toyota", "Camry", 2015, "Black", 15000, "A123BC"));
+        repo.add(new Car(2, "BMW", "X5", 2018, "White", 35000, "B456CD"));
+        repo.add(new Car(3, "Toyota", "Corolla", 2010, "Silver", 8000, "C789DE"));
+        repo.add(new Car(4, "Audi", "A6", 2015, "Blue", 20000, "D012EF"));
+        repo.add(new Car(5, "BMW", "X5", 2012, "Black", 17000, "E345FG"));
 
-        System.out.println("=== Книги Михаила Булгакова ===");
-        for (Book book : centralLibrary.getBooksByAuthor("Михаил Булгаков")) {
-            System.out.println(book);
+        // Получаем список всех машин
+        var cars = repo.getAll();
+
+        // ---------- a) Автомобили по марке ----------
+        String brandToFind = "Toyota";
+        System.out.println("Автомобили марки " + brandToFind + ":");
+
+        for (Car car : cars) {
+            if (car.getBrand().equalsIgnoreCase(brandToFind)) {
+                System.out.println(car);
+            }
         }
-        for (Book book : universityLibrary.getBooksByAuthor("Михаил Булгаков")) {
-            System.out.println(book);
+
+        // ---------- b) Модель старше n лет ----------
+        String modelToFind = "X5";
+        int n = 7;
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+        System.out.println("\nАвтомобили модели " + modelToFind + " старше " + n + " лет:");
+        for (Car car : cars) {
+            if (car.getModel().equalsIgnoreCase(modelToFind)
+                    && currentYear - car.getYear() > n) {
+                System.out.println(car);
+            }
         }
 
-        System.out.println("\n=== Все книги в Центральной библиотеке ===");
-        for (Book book : centralLibrary.getBooks()) {
-            System.out.println(book);
-        }
+        // ---------- c) Год + цена выше ----------
+        int yearToFind = 2015;
+        double minPrice = 18000;
 
-        System.out.println("\n=== Все книги в Университетской библиотеке ===");
-        for (Book book : universityLibrary.getBooks()) {
-            System.out.println(book);
+        System.out.println("\nАвтомобили " + yearToFind + " года, цена выше " + minPrice + ":");
+        for (Car car : cars) {
+            if (car.getYear() == yearToFind && car.getPrice() > minPrice) {
+                System.out.println(car);
+            }
         }
     }
 }
